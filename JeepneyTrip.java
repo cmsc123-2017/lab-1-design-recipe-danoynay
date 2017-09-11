@@ -1,52 +1,71 @@
-class JeepneyTrip {
-  double distance;
-  int totalPassengers;
-  int discountPassengers;
+import junit.framework.TestCase;
+
+/**
+ * A JUnit test case class.
+ * Every method starting with the word "test" will be called when running
+ * the test with JUnit.
+ */
+public class JeepneyTripTest extends TestCase {
   
-  // constants
-  final int BASE_KM = 5;
-  final double BASE_FARE = 7.0;
-  final double BASE_DISCOUNT = 6.0;
-  final double EXCESS_FARE = 0.5;
+  /**
+   * A test method.
+   * (Replace "X" with a name describing the test.  You may write as
+   * many "testSomething" methods in this class as you wish, and each
+   * one will be called when running JUnit over this class.)
+   */
   
+  // Constructor: JeepneyTrip(double distance, int totalPassengers, int discountPassengers)
   
-  JeepneyTrip(double distance, int totalPassengers, int discountPassengers) {
-    this.distance = distance;
-    this.totalPassengers = totalPassengers;
-    this.discountPassengers = discountPassengers;
+  public void testTripCreated() {
+    JeepneyTrip t = new JeepneyTrip(5, 5, 3);
+    
+    assertEquals(5.0, t.distance);
+    assertEquals(5, t.totalPassengers);
+    assertEquals(3, t.discountPassengers);
   }
   
-  // double -> double
-  // Returns a value if there is an exccess distance or more than the 
-  // base distance which is 5 kilometers. Returns zero if there is non.
-  double excessDistance(double distance) {
-    if (distance <= BASE_KM) {
-      return 0;
-    } else {
-      return distance - BASE_KM;
-    }
-  } 
-  
-  // int, double, int -> double 
-  // returns the computed fare of passengers considering 
-  //its type (regular or discounted passengers).  
-  double computeFare(int passengers, double fare) {
-  return passengers * (fare + (excessDistance(distance) * EXCESS_FARE)) ;
+  public void testFareChange() {
+    //without discount
+    JeepneyTrip t1 = new JeepneyTrip(4.5, 1, 0);
+    JeepneyTrip t2 = new JeepneyTrip(4.5, 1, 1);
+    JeepneyTrip t3 = new JeepneyTrip(5, 2, 1);
+    //with discount
+    JeepneyTrip t7 = new JeepneyTrip(5.5, 1, 0);
+    JeepneyTrip t8 = new JeepneyTrip(5.5, 1, 1);
+    JeepneyTrip t9 = new JeepneyTrip(5.5, 2, 1);
+    
+    //without discount
+    assertEquals(3.0, t1.fareChange(10));
+    assertEquals(4.0, t2.fareChange(10));
+    assertEquals(7.0, t3.fareChange(20));
+    //with discount
+    assertEquals(2.75, t7.fareChange(10));
+    assertEquals(3.75, t8.fareChange(10));
+    assertEquals(6.5, t9.fareChange(20));
   }
   
-  // -> double 
-  // Returns the total fare, given the total payment of passengers 
-  // including the discounted passengers.
-  double totalFare() {
-  return computeFare(totalPassengers - discountPassengers, BASE_FARE)
-    + computeFare(discountPassengers, BASE_DISCOUNT);
+  public void testTotalFare() {
+    JeepneyTrip t1 = new JeepneyTrip(5, 1, 1);
+    JeepneyTrip t2 = new JeepneyTrip(7, 2, 1);
+  
+    assertEquals(6.0, t1.totalFare());
+    assertEquals(15.0, t2.totalFare());
   }
   
-  // double -> double
-  // Returns the change, given the payment fare, total number of passengers,
-  // number of passengers with discount, and the trip distance.
-  double fareChange(double payment) {
-    return payment - totalFare();
+  public void testComputeFare() {
+    JeepneyTrip t1 = new JeepneyTrip(5, 1, 1);
+    JeepneyTrip t2 = new JeepneyTrip(7, 2, 1);
+  
+    assertEquals(7.0, t1.computeFare(1, 7.0));
+    assertEquals(16.0, t2.computeFare(2, 7.0));
   }
   
+  public void testExcessDistance() {
+    JeepneyTrip t1 = new JeepneyTrip(5, 1, 1);
+    JeepneyTrip t2 = new JeepneyTrip(7, 2, 1);
+  
+    assertEquals(0.0, t1.excessDistance(5));
+    assertEquals(2.0, t2.excessDistance(7));
+  
+   }
 }
